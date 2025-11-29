@@ -7,10 +7,10 @@
 <style>
     :root {
         /* 专业配色方案 */
-        --primary-color: #2c3e50; /* 商务深蓝 - 用于主按钮/标题 */
+        --primary-color: #2c3e50; 
         --primary-hover: #1a252f;
-        --accent-color: #3498db; /* 亮蓝 - 用于选中/高亮 */
-        --bg-color: #f4f6f8;      /* 浅灰背景 - 护眼 */
+        --accent-color: #3498db; 
+        --bg-color: #f4f6f8;      
         --card-bg: #ffffff;
         --text-main: #333333;
         --text-sub: #666666;
@@ -43,8 +43,8 @@
         width: 100%;
         max-width: 850px;
         background: var(--card-bg);
-        border-radius: 8px; /* 圆角改小，更正式 */
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05); /* 阴影更克制 */
+        border-radius: 8px;
+        box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
         padding: 40px;
         position: relative;
     }
@@ -66,7 +66,7 @@
         letter-spacing: 0.5px;
     }
 
-    /* 进度条 - 极简风格 */
+    /* 进度条 */
     .progress-wrapper {
         display: flex;
         align-items: center;
@@ -89,7 +89,7 @@
     .progress-info {
         font-size: 14px;
         color: var(--text-sub);
-        font-family: monospace; /* 数字等宽，防止抖动 */
+        font-family: monospace;
     }
 
     /* 题目区域 */
@@ -111,6 +111,8 @@
         border-radius: 4px;
         margin-right: 8px;
         vertical-align: middle;
+        position: relative;
+        top: -1px;
     }
 
     /* 选项列表 */
@@ -132,6 +134,7 @@
         transition: all 0.2s;
         color: var(--text-main);
         position: relative;
+        line-height: 1.5;
     }
 
     button.option-btn:hover:not(:disabled) {
@@ -139,22 +142,23 @@
         border-color: #b3c0d1;
     }
 
-    /* 选中状态 - 使用商务蓝 */
+    /* 选中状态 */
     button.option-btn.selected {
         background-color: #ecf5ff;
         border-color: var(--accent-color);
         color: var(--accent-color);
         font-weight: 500;
     }
-    /* 选中标记 */
     button.option-btn.selected::after {
         content: "✔";
         position: absolute;
         right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
         font-size: 14px;
     }
 
-    /* 正确与错误状态 - 仅在提交后显示 */
+    /* 提交后的正确/错误样式 */
     button.option-btn.correct-ans {
         background-color: var(--success-bg) !important;
         border-color: var(--success-border) !important;
@@ -174,7 +178,7 @@
         text-align: right;
     }
 
-    /* 通用主按钮样式 */
+    /* 按钮 */
     .btn {
         padding: 12px 30px;
         font-size: 16px;
@@ -203,11 +207,9 @@
         background-color: #f0f4f8;
     }
 
-    /* 开始面板样式 */
+    /* 开始面板 */
     #start-panel { text-align: center; padding: 40px 0; }
-    .select-wrapper {
-        margin: 20px 0 40px;
-    }
+    .select-wrapper { margin: 20px 0 40px; }
     select {
         padding: 10px 15px;
         font-size: 16px;
@@ -217,7 +219,7 @@
         min-width: 200px;
     }
 
-    /* 结果反馈条 */
+    /* 结果反馈条（单题） */
     #feedback {
         margin-top: 15px;
         padding: 12px 20px;
@@ -229,7 +231,7 @@
     .fb-success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
     .fb-error { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
 
-    /* 结果页 */
+    /* 结果页统计卡片 */
     .result-card {
         background: #f8f9fa;
         padding: 30px;
@@ -244,9 +246,10 @@
     .stat-num { font-size: 36px; font-weight: bold; color: var(--primary-color); }
     .stat-label { font-size: 14px; color: var(--text-sub); margin-top: 5px; }
 
+    /* 错题回顾列表 */
     #wrong-list-container {
         text-align: left;
-        max-height: 500px;
+        max-height: 600px;
         overflow-y: auto;
         border-top: 1px solid var(--border-color);
         margin-top: 20px;
@@ -255,13 +258,43 @@
     .wrong-item {
         background: white;
         border: 1px solid var(--border-color);
-        padding: 20px;
-        margin-bottom: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
         border-radius: 6px;
-        border-left: 4px solid var(--error-text);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
-    .wrong-item h4 { margin-bottom: 10px; font-size: 16px; color: #333; }
-    .analysis { font-size: 14px; color: var(--text-sub); margin-top: 8px; }
+    .wrong-item h4 { margin-bottom: 15px; font-size: 16px; color: #333; line-height: 1.5; }
+    
+    /* 错题解析的具体内容块 */
+    .analysis-box {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px dashed #eee;
+    }
+    .ans-row {
+        display: flex;
+        align-items: flex-start;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 8px 12px;
+        border-radius: 4px;
+    }
+    .ans-row.user-wrong {
+        background-color: var(--error-bg);
+        color: #c0392b;
+    }
+    .ans-row.right-one {
+        background-color: var(--success-bg);
+        color: #27ae60;
+    }
+    .label {
+        font-weight: bold;
+        min-width: 70px;
+        flex-shrink: 0;
+    }
     
     /* 响应式 */
     @media (max-width: 600px) {
@@ -269,6 +302,7 @@
         h2 { font-size: 20px; }
         .btn { width: 100%; margin-top: 10px; }
         .action-bar { display: flex; flex-direction: column; }
+        .result-card { flex-direction: column; gap: 20px; }
     }
 </style>
 </head>
@@ -276,14 +310,14 @@
 
 <div class="container">
     <header>
-        <h2>电网企业文化刷题系统</h2>
+        <h2>电网企业文化在线练习系统</h2>
         <div style="font-size: 14px; color: #999;" id="date-display"></div>
     </header>
 
     <div id="start-panel">
         <div style="color: var(--text-sub); line-height: 1.8;">
-            <p>欢迎使用在线刷题系统。</p>
-            <p>从题库中随机抽取题目，暂不支持自定范围。</p>
+            <p>欢迎使用在线练习系统。</p>
+            <p>本系统支持单选、多选及判断题型，暂不支持自定义范围。</p>
         </div>
         
         <div class="select-wrapper">
@@ -549,28 +583,42 @@ function renderResult() {
     el.wrongListContainer.innerHTML = "";
     
     if (wrongs.length > 0) {
-        el.wrongListContainer.innerHTML = `<h3 style="margin-bottom:20px; color:#333;">错题回顾 (${wrongs.length}题)</h3>`;
+        el.wrongListContainer.innerHTML = `<h3 style="margin-bottom:20px; color:var(--primary-color);">错题回顾 (${wrongs.length}题)</h3>`;
         wrongs.forEach(r => {
             const div = document.createElement("div");
             div.className = "wrong-item";
             
-            const myAns = r.selected.length ? r.selected.sort().join("") : "未作答";
-            const rightAns = r.correctArr.join("");
+            // 构建您的答案文本
+            let userAnsText = "";
+            if (r.selected.length === 0) {
+                userAnsText = "未作答";
+            } else {
+                userAnsText = r.selected.sort().map(key => `<b>${key}</b>.${r.q.options[key]}`).join("； ");
+            }
+
+            // 构建正确答案文本
+            const rightAnsText = r.correctArr.map(key => `<b>${key}</b>.${r.q.options[key]}`).join("； ");
             
             div.innerHTML = `
-                <h4>[ID:${r.q.id}] ${r.q.question}</h4>
-                <div class="analysis">
-                    <span style="color: var(--error-text); margin-right:15px;">您的选择：${myAns}</span>
-                    <span style="color: var(--success-text); font-weight:bold;">正确答案：${rightAns}</span>
+                <h4><span style="color:#999">[ID:${r.q.id}]</span> ${r.q.question}</h4>
+                <div class="analysis-box">
+                    <div class="ans-row user-wrong">
+                        <span class="label">您的选择：</span>
+                        <span>${userAnsText}</span>
+                    </div>
+                    <div class="ans-row right-one">
+                        <span class="label">正确答案：</span>
+                        <span>${rightAnsText}</span>
+                    </div>
                 </div>
             `;
             el.wrongListContainer.appendChild(div);
         });
     } else {
         el.wrongListContainer.innerHTML = `
-            <div style="text-align:center; padding:40px; color: var(--success-text);">
-                <h3>🎉 恭喜！全对通关！</h3>
-                <p>完美的表现，请继续保持。</p>
+            <div style="text-align:center; padding:60px; color: var(--success-text);">
+                <h3 style="font-size:24px;">🎉 恭喜！全对通关！</h3>
+                <p style="margin-top:10px; color:#666;">展现了扎实的专业知识储备。</p>
             </div>
         `;
     }
