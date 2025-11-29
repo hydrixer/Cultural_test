@@ -6,17 +6,17 @@
 <title>电力文化小站-免费电网企业文化练习</title>
 <style>
     :root {
-        /* 专业配色方案 */
+        /* 商务配色 - 深蓝/亮蓝/灰 */
         --primary-color: #2c3e50; 
         --primary-hover: #1a252f;
         --accent-color: #3498db; 
+        --accent-light: #e8f4fd;
         --bg-color: #f4f6f8;      
         --card-bg: #ffffff;
         --text-main: #333333;
         --text-sub: #666666;
         --border-color: #e1e4e8;
         
-        /* 状态色 */
         --success-bg: #f0f9eb;
         --success-text: #67c23a;
         --success-border: #c2e7b0;
@@ -29,55 +29,147 @@
     * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
 
     body {
-        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
         background-color: var(--bg-color);
         color: var(--text-main);
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         min-height: 100vh;
-        padding-top: 40px;
-        padding-bottom: 40px;
+        padding: 30px 20px;
     }
 
     .container {
         width: 100%;
-        max-width: 850px;
+        max-width: 900px;
+        min-height: 80vh;
         background: var(--card-bg);
-        border-radius: 8px;
-        box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
-        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); /* 更柔和的高级阴影 */
+        padding: 50px;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: auto;
     }
 
     /* 顶部标题栏 */
     header {
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid #eee;
         padding-bottom: 20px;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
     h2 {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 26px;
+        font-weight: 700;
         color: var(--primary-color);
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
-    /* 进度条 */
+    /* ======== 1. 首页美化核心区域 ======== */
+    #start-panel { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        max-width: 600px; /* 限制内容宽度，防止太散 */
+        margin: 0 auto;   /* 水平居中 */
+    }
+
+    /* 头部图标 */
+    .hero-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        background: var(--bg-color);
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        border-radius: 50%;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+    }
+
+    .intro-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+    }
+
+    .intro-desc {
+        color: var(--text-sub);
+        margin-bottom: 30px;
+        font-size: 15px;
+    }
+
+    /* 特性标签栏 */
+    .feature-tags {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+    .f-tag {
+        font-size: 13px;
+        color: var(--accent-color);
+        background: var(--accent-light);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    /* 卡片式选择器 (替代下拉框) */
+    .mode-selector {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+
+    .mode-card {
+        background: #fff;
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .mode-card:hover {
+        border-color: #bdc3c7;
+        transform: translateY(-2px);
+    }
+
+    .mode-card.active {
+        border-color: var(--accent-color);
+        background-color: var(--accent-light);
+        color: var(--accent-color);
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+    }
+    
+    .mode-num { font-size: 24px; display: block; margin-bottom: 5px; }
+    .mode-label { font-size: 13px; color: #888; font-weight: normal; }
+    .mode-card.active .mode-label { color: var(--accent-color); }
+
+    /* ======== 答题区样式 ======== */
     .progress-wrapper {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 30px;
+        gap: 20px;
+        margin-bottom: 40px;
     }
     .progress-track {
         flex: 1;
-        height: 6px;
-        background-color: #eaeaea;
-        border-radius: 3px;
+        height: 8px;
+        background-color: #f0f2f5;
+        border-radius: 4px;
         overflow: hidden;
     }
     .progress-fill {
@@ -87,48 +179,47 @@
         transition: width 0.4s ease;
     }
     .progress-info {
-        font-size: 14px;
+        font-size: 16px;
         color: var(--text-sub);
         font-family: monospace;
+        font-weight: bold;
     }
 
-    /* 题目区域 */
     .question-box {
-        font-size: 18px;
-        line-height: 1.6;
+        font-size: 20px;
+        line-height: 1.7;
         color: var(--text-main);
-        margin-bottom: 25px;
+        margin-bottom: 35px;
         font-weight: 500;
     }
     
     .tag {
         display: inline-block;
-        padding: 2px 8px;
-        background-color: var(--bg-color);
-        border: 1px solid var(--border-color);
-        color: var(--text-sub);
-        font-size: 12px;
+        padding: 4px 10px;
+        background-color: #fff;
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+        font-size: 13px;
         border-radius: 4px;
-        margin-right: 8px;
+        margin-right: 10px;
         vertical-align: middle;
         position: relative;
-        top: -1px;
+        top: -2px;
     }
 
-    /* 选项列表 */
     .options-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 15px;
     }
 
     button.option-btn {
         width: 100%;
-        padding: 16px 20px;
-        font-size: 16px;
+        padding: 18px 25px;
+        font-size: 17px;
         background-color: #fff;
         border: 1px solid var(--border-color);
-        border-radius: 6px;
+        border-radius: 8px;
         text-align: left;
         cursor: pointer;
         transition: all 0.2s;
@@ -138,11 +229,10 @@
     }
 
     button.option-btn:hover:not(:disabled) {
-        background-color: #f9fafc;
+        background-color: #f8faff;
         border-color: #b3c0d1;
     }
 
-    /* 选中状态 */
     button.option-btn.selected {
         background-color: #ecf5ff;
         border-color: var(--accent-color);
@@ -152,13 +242,12 @@
     button.option-btn.selected::after {
         content: "✔";
         position: absolute;
-        right: 20px;
+        right: 25px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 14px;
+        font-size: 16px;
     }
 
-    /* 提交后的正确/错误样式 */
     button.option-btn.correct-ans {
         background-color: var(--success-bg) !important;
         border-color: var(--success-border) !important;
@@ -172,30 +261,33 @@
 
     /* 底部操作栏 */
     .action-bar {
-        margin-top: 30px;
-        padding-top: 20px;
+        margin-top: 40px;
+        padding-top: 25px;
         border-top: 1px dashed var(--border-color);
         text-align: right;
     }
 
-    /* 按钮 */
+    /* 按钮系统 */
     .btn {
-        padding: 12px 30px;
+        padding: 14px 40px;
         font-size: 16px;
-        border-radius: 4px;
+        border-radius: 6px;
         cursor: pointer;
         border: none;
         font-weight: 500;
-        transition: background 0.3s;
+        transition: background 0.3s, transform 0.1s;
     }
+    .btn:active { transform: translateY(1px); }
 
     .btn-primary {
         background-color: var(--primary-color);
         color: #fff;
+        box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2);
     }
     .btn-primary:hover {
         background-color: var(--primary-hover);
-        box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(44, 62, 80, 0.3);
     }
 
     .btn-outline {
@@ -207,35 +299,23 @@
         background-color: #f0f4f8;
     }
 
-    /* 开始面板 */
-    #start-panel { text-align: center; padding: 40px 0; }
-    .select-wrapper { margin: 20px 0 40px; }
-    select {
-        padding: 10px 15px;
-        font-size: 16px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        background: white;
-        min-width: 200px;
-    }
-
-    /* 结果反馈条（单题） */
+    /* 结果反馈条 */
     #feedback {
-        margin-top: 15px;
-        padding: 12px 20px;
-        border-radius: 4px;
-        font-size: 15px;
+        margin-top: 20px;
+        padding: 15px 25px;
+        border-radius: 6px;
+        font-size: 16px;
         display: none;
         text-align: left;
     }
     .fb-success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
     .fb-error { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
 
-    /* 结果页统计卡片 */
+    /* 结果页 */
     .result-card {
         background: #f8f9fa;
-        padding: 30px;
-        border-radius: 8px;
+        padding: 40px;
+        border-radius: 10px;
         margin-bottom: 30px;
         display: flex;
         justify-content: space-around;
@@ -243,13 +323,12 @@
         border: 1px solid var(--border-color);
     }
     .stat-item { text-align: center; }
-    .stat-num { font-size: 36px; font-weight: bold; color: var(--primary-color); }
-    .stat-label { font-size: 14px; color: var(--text-sub); margin-top: 5px; }
+    .stat-num { font-size: 42px; font-weight: bold; color: var(--primary-color); }
+    .stat-label { font-size: 15px; color: var(--text-sub); margin-top: 8px; }
 
-    /* 错题回顾列表 */
     #wrong-list-container {
         text-align: left;
-        max-height: 600px;
+        max-height: 500px;
         overflow-y: auto;
         border-top: 1px solid var(--border-color);
         margin-top: 20px;
@@ -260,12 +339,9 @@
         border: 1px solid var(--border-color);
         padding: 25px;
         margin-bottom: 20px;
-        border-radius: 6px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
-    .wrong-item h4 { margin-bottom: 15px; font-size: 16px; color: #333; line-height: 1.5; }
-    
-    /* 错题解析的具体内容块 */
     .analysis-box {
         display: flex;
         flex-direction: column;
@@ -277,32 +353,62 @@
     .ans-row {
         display: flex;
         align-items: flex-start;
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.5;
-        padding: 8px 12px;
-        border-radius: 4px;
+        padding: 10px 15px;
+        border-radius: 6px;
     }
-    .ans-row.user-wrong {
-        background-color: var(--error-bg);
-        color: #c0392b;
-    }
-    .ans-row.right-one {
-        background-color: var(--success-bg);
-        color: #27ae60;
-    }
-    .label {
-        font-weight: bold;
-        min-width: 70px;
-        flex-shrink: 0;
+    .ans-row.user-wrong { background-color: var(--error-bg); color: #c0392b; }
+    .ans-row.right-one { background-color: var(--success-bg); color: #27ae60; }
+    .label { font-weight: bold; min-width: 80px; flex-shrink: 0; }
+
+    /* ======== 底部页脚 ======== */
+    .page-footer {
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+        color: #b0b4b8; /* 淡色 */
+        padding: 20px 0;
+        margin-top: auto;
+        transition: opacity 0.3s;
     }
     
-    /* 响应式 */
-    @media (max-width: 600px) {
-        .container { padding: 20px; border-radius: 0; min-height: 100vh; }
-        h2 { font-size: 20px; }
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .footer-links {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .contact-item {
+        display: inline-flex;
+        align-items: center;
+        cursor: default;
+    }
+    
+    .divider { color: #dcdfe6; }
+    
+    /* 响应式适配 */
+    @media (max-width: 768px) {
+        .container { 
+            padding: 25px; 
+            min-height: 90vh; 
+            border-radius: 8px;
+        }
+        h2 { font-size: 22px; }
+        .mode-selector { grid-template-columns: 1fr; }
         .btn { width: 100%; margin-top: 10px; }
         .action-bar { display: flex; flex-direction: column; }
-        .result-card { flex-direction: column; gap: 20px; }
+        .result-card { flex-direction: column; gap: 25px; }
+        .footer-links { flex-direction: column; gap: 5px; }
+        .divider { display: none; }
     }
 </style>
 </head>
@@ -311,27 +417,40 @@
 <div class="container">
     <header>
         <h2>电网企业文化在线练习系统</h2>
-        <div style="font-size: 14px; color: #999;" id="date-display"></div>
+        <div style="font-size: 14px; color: #bbb; font-family: monospace;" id="date-display"></div>
     </header>
 
     <div id="start-panel">
-        <div style="color: var(--text-sub); line-height: 1.8;">
-            <p>欢迎使用在线练习系统。</p>
-            <p>本系统支持单选、多选及判断题型，暂不支持自定义范围。</p>
+        <div class="hero-icon">⚡</div>
+        <div class="intro-title">欢迎使用本系统</div>
+        <div class="intro-desc">请选择本次练习的题目数量，系统将随机抽取试题</div>
+        
+        <div class="feature-tags">
+            <span class="f-tag">✓ 单选题</span>
+            <span class="f-tag">✓ 多选题</span>
+            <span class="f-tag">✓ 判断题</span>
+        </div>
+
+        <div class="mode-selector">
+            <div class="mode-card active" onclick="selectMode(10, this)">
+                <span class="mode-num">10</span>
+                <span class="mode-label">快速练习</span>
+            </div>
+            <div class="mode-card" onclick="selectMode(20, this)">
+                <span class="mode-num">20</span>
+                <span class="mode-label">标准测试</span>
+            </div>
+            <div class="mode-card" onclick="selectMode(50, this)">
+                <span class="mode-num">50</span>
+                <span class="mode-label">强化训练</span>
+            </div>
+            <div class="mode-card" onclick="selectMode(100, this)">
+                <span class="mode-num">100</span>
+                <span class="mode-label">全面摸底</span>
+            </div>
         </div>
         
-        <div class="select-wrapper">
-            <label for="num-select" style="margin-right: 10px; font-weight: bold;">测评题量</label>
-            <select id="num-select">
-                <option value="10">10 题 (快速练习)</option>
-                <option value="20">20 题 (标准测试)</option>
-                <option value="50">50 题 (强化训练)</option>
-                <option value="100">100 题 (全面摸底)</option>
-            </select>
-        </div>
-        
-        <button id="start-btn" class="btn btn-primary">开始测评</button>
-        <!-- <div style="margin-top: 15px; font-size: 12px; color: #aaa;">请确保目录下存在 tiku.json 数据文件</div> -->
+        <button id="start-btn" class="btn btn-primary" style="width: 100%; max-width: 300px; padding: 16px;">开始答题</button>
     </div>
 
     <div id="quiz-container" style="display:none;">
@@ -380,6 +499,15 @@
     </div>
 </div>
 
+<footer class="page-footer" id="main-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <span class="contact-item">技术支持与合作联系：</span>
+            <span class="contact-item">📧 xiaoshuaiovo@sina.com</span>
+        </div>
+    </div>
+</footer>
+
 <script>
 // 设置日期
 document.getElementById('date-display').innerText = new Date().toLocaleDateString();
@@ -388,7 +516,7 @@ let questionBank = [];
 let quizQuestions = [];
 let currentIndex = 0;
 let selectedAnswers = [];
-let numQuestions = 10;
+let numQuestions = 10; // 默认选中10
 let results = [];
 
 // DOM Elements
@@ -404,11 +532,20 @@ const el = {
     quizContainer: document.getElementById("quiz-container"),
     resultPanel: document.getElementById("result-panel"),
     wrongListContainer: document.getElementById("wrong-list-container"),
-    numSelect: document.getElementById("num-select"),
     startBtn: document.getElementById("start-btn"),
     retryBtn: document.getElementById("retry-btn"),
-    returnBtn: document.getElementById("return-btn")
+    returnBtn: document.getElementById("return-btn"),
+    footer: document.getElementById("main-footer")
 };
+
+// ================== 卡片选择逻辑 (新增) ==================
+function selectMode(num, card) {
+    numQuestions = num;
+    // 移除所有 active
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    // 给当前卡片加 active
+    card.classList.add('active');
+}
 
 // ================== 加载逻辑 ==================
 fetch("tiku.json")
@@ -426,9 +563,11 @@ fetch("tiku.json")
 
 el.startBtn.onclick = () => initQuiz();
 el.retryBtn.onclick = () => initQuiz(numQuestions);
+
 el.returnBtn.onclick = () => {
     el.resultPanel.style.display = "none";
-    el.startPanel.style.display = "block";
+    el.startPanel.style.display = "flex"; 
+    el.footer.style.opacity = "1"; 
 };
 
 function getRandomQuestions(arr, n) {
@@ -442,22 +581,24 @@ function initQuiz(customNum) {
         return;
     }
     
+    // 如果传入了customNum(重试逻辑)，则覆盖；否则使用当前选择的numQuestions
     if (customNum) numQuestions = customNum;
-    else numQuestions = parseInt(el.numSelect.value);
 
     quizQuestions = getRandomQuestions(questionBank, Math.min(numQuestions, questionBank.length));
     currentIndex = 0;
     results = [];
     
+    // UI切换
     el.startPanel.style.display = "none";
     el.resultPanel.style.display = "none";
+    el.footer.style.opacity = "0"; 
+    
     el.quizContainer.style.display = "block";
     
     renderQuestion();
 }
 
 function renderQuestion() {
-    // 界面重置
     el.feedback.style.display = "none";
     el.feedback.className = "";
     el.next.style.display = "none";
@@ -466,28 +607,22 @@ function renderQuestion() {
 
     const q = quizQuestions[currentIndex];
     
-    // 数据兼容性处理
     let correctArr = Array.isArray(q.answer) ? q.answer : q.answer.split('');
     const isMultiple = correctArr.length > 1;
     
-    // 题型标签
     const tagHtml = isMultiple 
         ? `<span class="tag" style="color: #e6a23c; border-color: #f3d19e;">多选题</span>` 
         : `<span class="tag" style="color: #409eff; border-color: #a0cfff;">单选题</span>`;
 
-    // 进度条更新
     const progressPercent = ((currentIndex + 1) / quizQuestions.length) * 100;
     el.progress.style.width = `${progressPercent}%`;
     el.progressText.innerText = `${currentIndex + 1} / ${quizQuestions.length}`;
 
-    // 题目内容
     el.question.innerHTML = `${tagHtml} ${q.question}`;
     el.options.innerHTML = "";
 
-    // 渲染选项
     for (const key in q.options) {
         const btn = document.createElement("button");
-        // 选项内容
         btn.innerHTML = `<span style="font-weight:bold; margin-right:10px;">${key}.</span> ${q.options[key]}`;
         btn.className = "option-btn";
         btn.onclick = () => toggleOption(btn, key, isMultiple);
@@ -520,29 +655,24 @@ el.submit.onclick = () => {
     const q = quizQuestions[currentIndex];
     let correctArr = Array.isArray(q.answer) ? q.answer : q.answer.split('');
     
-    // 数组比对
     const isCorrect = selectedAnswers.length === correctArr.length && 
                       selectedAnswers.sort().every((value, index) => value === correctArr.sort()[index]);
     
     results.push({ q, selected: [...selectedAnswers], correct: isCorrect, correctArr });
 
-    // 锁定选项并显色
     const btns = el.options.querySelectorAll("button");
     btns.forEach(btn => {
         btn.disabled = true;
         const key = btn.innerText.trim().charAt(0); 
         
-        // 正确答案显示绿色
         if (correctArr.includes(key)) {
             btn.classList.add("correct-ans");
         }
-        // 选错的显示红色
         if (selectedAnswers.includes(key) && !correctArr.includes(key)) {
             btn.classList.add("wrong-ans");
         }
     });
 
-    // 结果反馈
     el.feedback.style.display = "block";
     if (isCorrect) {
         el.feedback.className = "fb-success";
@@ -568,27 +698,25 @@ el.next.onclick = () => {
 function renderResult() {
     el.quizContainer.style.display = "none";
     el.resultPanel.style.display = "block";
+    el.footer.style.opacity = "0"; 
 
     const correctCount = results.filter(r => r.correct).length;
     const total = results.length;
     const rate = Math.round((correctCount / total) * 100);
 
-    // 填充统计面板
-    document.getElementById("total-score").innerText = correctCount; // 简单算作得分
+    document.getElementById("total-score").innerText = correctCount; 
     document.getElementById("accuracy-rate").innerText = `${rate}%`;
     document.getElementById("total-time").innerText = total;
 
-    // 渲染错题本
     const wrongs = results.filter(r => !r.correct);
     el.wrongListContainer.innerHTML = "";
     
     if (wrongs.length > 0) {
-        el.wrongListContainer.innerHTML = `<h3 style="margin-bottom:20px; color:var(--primary-color);">错题回顾 (${wrongs.length}题)</h3>`;
+        el.wrongListContainer.innerHTML = `<h3 style="margin-bottom:20px; color:var(--primary-color); font-size:18px;">错题回顾 (${wrongs.length}题)</h3>`;
         wrongs.forEach(r => {
             const div = document.createElement("div");
             div.className = "wrong-item";
             
-            // 构建您的答案文本
             let userAnsText = "";
             if (r.selected.length === 0) {
                 userAnsText = "未作答";
@@ -596,11 +724,10 @@ function renderResult() {
                 userAnsText = r.selected.sort().map(key => `<b>${key}</b>.${r.q.options[key]}`).join("； ");
             }
 
-            // 构建正确答案文本
             const rightAnsText = r.correctArr.map(key => `<b>${key}</b>.${r.q.options[key]}`).join("； ");
             
             div.innerHTML = `
-                <h4><span style="color:#999">[ID:${r.q.id}]</span> ${r.q.question}</h4>
+                <h4 style="line-height:1.6"><span style="color:#999; margin-right:5px;">[ID:${r.q.id}]</span> ${r.q.question}</h4>
                 <div class="analysis-box">
                     <div class="ans-row user-wrong">
                         <span class="label">您的选择：</span>
@@ -617,8 +744,8 @@ function renderResult() {
     } else {
         el.wrongListContainer.innerHTML = `
             <div style="text-align:center; padding:60px; color: var(--success-text);">
-                <h3 style="font-size:24px;">🎉 恭喜！全对通关！</h3>
-                <p style="margin-top:10px; color:#666;">展现了扎实的专业知识储备。</p>
+                <h3 style="font-size:24px; margin-bottom:10px;">🎉 恭喜！全对通关！</h3>
+                <p style="color:#999;">展现了扎实的专业知识储备。</p>
             </div>
         `;
     }
