@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Output.txt 转 JSON 工具</title>
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 900px; margin: 20px auto; padding: 20px; background-color: #f4f6f9; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        textarea { width: 100%; height: 300px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; font-family: monospace; font-size: 13px; resize: vertical; margin-bottom: 15px; }
+        .btn-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        .btn-convert { background-color: #28a745; color: white; }
+        .btn-convert:hover { background-color: #218838; }
+        #status { margin-top: 15px; padding: 15px; background: #e9ecef; border-radius: 5px; color: #495057; white-space: pre-wrap; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📂 Output.txt 转 JSON 专用工具</h2>
+        <p>请打开您的 <code>output.txt</code> 文件，<b>全选复制</b>，然后粘贴到下方框中：</p>
+        <textarea id="rawInput" placeholder="在此粘贴 output.txt 的全部内容..."></textarea>
+        <div class="btn-group">
+            <button class="btn-convert" onclick="processText()">🚀 转换并下载 JSON</button>
+        </div>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        function processText() {
+            const input = document.getElementById('rawInput').value;
+            const statusDiv = document.getElementById('status');
+            
+            if (!input.trim()) {
+                alert("请先粘贴内容！");
+                return;
+            }
+
+            try {
+                let text = input;
+
+                // 去掉 [source] 标签
+                text = text.replace(/\[source\]/g, "");
+
+                // 去掉单独的页码行 "- 123 -"
+                text = text.replace(/^\s*-\s*\d+\s*-\s*$/gm, "");
+
+                // 去掉多余空行
+                text = text.replace(/\n\s*\n/g, "\n");
+
+                // 分割题块
+                const splitRegex = /\n(?=\d+、)/g;
+                const blocks = text.split(splitRegex);
+
+                const questions = [];
+                let successCount = 0;
+
+                blocks.forEach(block => {
+                    block = block.trim();
+                    const idMatch = block.match(/^(\d+)、/);
+                    if (!idMatch) return;
+
+                    const id = parseInt(idMatch[1]);
+                    
+                    // 提取答案
+                    const ansMatch = block.match(/答案[：:]\s*([A-D]+)/);
+                    if (!ansMatch) return;
+
+                    const answer = ansMatch[1].trim();
+
+                    // 题目内容
+                    const ansIndex = ansMatch.index;
+                    const idLength = idMatch[0].length;
+                    let fullContent = block.substring(idLength, ansIndex).trim();
+
+                    const options = {};
+                    let questionText = fullContent;
+
+                    // 检查是否有选项
+                    const firstOptMatch = fullContent.match(/(\s|^)A\./);
+                    if (firstOptMatch) {
+                        questionText = fullContent.substring(0, firstOptMatch.index).trim();
+                        const optsContent = fullContent.substring(firstOptMatch.index);
+
+                        const optRegex = /([A-D])\.\s*([\s\S]+?)(?=(\s[A-D]\.|$))/g;
+                        let m;
+                        const flatOpts = optsContent.replace(/\n/g, " ");
+                        while ((m = optRegex.exec(flatOpts)) !== null) {
+                            options[m[1]] = m[2].trim();
+                        }
+                    } else {
+                        // 判断题处理
+                        if (answer.length === 1 && (fullContent.includes("（ ）") || fullContent.includes("( )"))) {
+                            options["A"] = "正确";
+                            options["B"] = "错误";
+                        }
+                    }
+
+                    questionText = questionText.replace(/\n/g, "");
+                    questions.push({ id, question: questionText, options, answer });
+                    successCount++;
+                });
+
+                const jsonStr = JSON.stringify(questions, null, 4);
+                const blob = new Blob([jsonStr], {type: "application/json"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "question_bank_full.json";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                statusDiv.style.display = 'block';
+                statusDiv.innerText = `✅ 转换成功！\n共提取题目：${successCount} 道\n文件已自动下载。`;
+
+            } catch (e) {
+                console.error(e);
+                alert("转换出错，请检查控制台日志");
+            }
+        }
+    </script>
+</body>
+</html>

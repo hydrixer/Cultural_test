@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>在线刷题工具</title>
+<style>
+body { font-family: "Microsoft YaHei", sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background: #f4f6f9; }
+.container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+h2 { text-align: center; color: #2c3e50; }
+.progress { margin-bottom: 20px; font-size: 16px; }
+.question { margin-bottom: 20px; font-size: 18px; }
+.options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+button.option-btn { padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; }
+button.option-btn:hover { background: #f0f0f0; }
+button.confirm-btn { padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background: #28a745; color: white; cursor: pointer; }
+button.confirm-btn:hover { background: #218838; }
+#feedback { margin-bottom: 20px; font-weight: bold; }
+#restart-btn { display: none; margin-top: 20px; background: #007bff; }
+#restart-btn:hover { background: #0056b3; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>在线刷题工具</h2>
+    <div id="quiz-container">
+        <div class="progress" id="progress"></div>
+        <div id="question" class="question"></div>
+        <div id="options" class="options"></div>
+        <div id="feedback"></div>
+        <button id="next-btn" class="confirm-btn" style="display:none;">下一题</button>
+        <button id="restart-btn" class="confirm-btn">重新开始</button>
+    </div>
+</div>
+
+<script>
+let questionBank = [];
+let quizQuestions = [];
+let currentIndex = 0;
+const numQuestions = 5; // 每次抽题数量
+
+const progressEl = document.getElementById("progress");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const feedbackEl = document.getElementById("feedback");
+const nextBtn = document.getElementById("next-btn");
+const restartBtn = document.getElementById("restart-btn");
+
+// ================== 加载题库 ==================
+fetch("tiku.json")
+    .then(res => res.json())
+    .then(data => {
+        questionBank = data;
+        startQuiz();
+    })
+    .catch(err => alert("加载题库失败，请检查 a.json 文件"));
+
+function getRandomQuestions(arr, n) {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
+}
+
+// ================== 刷题流程 ==================
+function startQuiz() {
+    quizQuestions = getRandomQuestions(questionBank, Math.min(numQuestions, questionBank.length));
+    currentIndex = 0;
+    restartBtn.style.display = "none";
+    showQuestion();
+}
+
+function showQuestion() {
+    feedbackEl.innerText = "";
+    nextBtn.style.display = "none";
+    const q = quizQuestions[currentIndex];
+    progressEl.innerText = `题目 ${currentIndex + 1} / ${quizQuestions.length}`;
+    questionEl.innerText = `${q.question}`;
+    optionsEl.innerHTML = "";
+    for (const key in q.options) {
+        const btn = document.createElement("button");
+        btn.innerText = `${key}. ${q.options[key]}`;
+        btn.className = "option-btn";
+        btn.onclick = () => selectAnswer(key);
+        optionsEl.appendChild(btn);
+    }
+}
+
+function selectAnswer(selected) {
+    const q = quizQuestions[currentIndex];
+    optionsEl.querySelectorAll("button").forEach(btn => btn.disabled = true);
+    if (selected === q.answer) {
+        feedbackEl.style.color = "green";
+        feedbackEl.innerText = "✅ 正确！";
+        nextBtn.style.display = "inline-block";
+    } else {
+        feedbackEl.style.color = "red";
+        feedbackEl.innerText = `❌ 错误！正确答案：${q.answer}. ${q.options[q.answer]}`;
+        nextBtn.style.display = "inline-block";
+    }
+}
+
+nextBtn.onclick = () => {
+    currentIndex++;
+    if (currentIndex < quizQuestions.length) {
+        showQuestion();
+    } else {
+        questionEl.innerText = "🎉 已完成所有题目！";
+        optionsEl.innerHTML = "";
+        feedbackEl.innerText = "";
+        nextBtn.style.display = "none";
+        restartBtn.style.display = "inline-block";
+        progressEl.innerText = "";
+    }
+}
+
+restartBtn.onclick = () => {
+    startQuiz();
+}
+</script>
+</body>
+</html>
